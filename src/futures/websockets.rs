@@ -142,8 +142,14 @@ impl<'a, WE: serde::de::DeserializeOwned> WebSockets<'a, WE> {
                         if msg.is_empty() {
                             return Ok(());
                         }
-                        let event: WE = from_str(msg.as_str())?;
-                        (self.handler)(event)?;
+                        let res = from_str(msg.as_str());
+                        if let Err(e) = res {
+                            println!("{:?}", e);
+                        }
+                        else {
+                            let event: WE = res?;
+                            (self.handler)(event)?;
+                        }
                     }
                     Message::Ping(_) | Message::Pong(_) | Message::Binary(_) | Message::Frame(_) => {}
                     Message::Close(e) => {
