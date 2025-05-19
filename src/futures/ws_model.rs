@@ -6,7 +6,44 @@ use crate::rest_model::{string_or_float, string_or_float_opt, ExecutionType, Ord
 pub enum WebsocketEvent {
     AccountUpdate(Box<AccountUpdate>),
     OrderTradeUpdate(Box<OrderTradeUpdate>),
+    TradeLite(Box<TradeLite>),
+    ListenKeyExpired(Box<ListenKeyExpired>),
 }
+
+#[derive(Debug, Deserialize)]
+pub struct ListenKeyExpired {
+    #[serde(rename = "E")]
+    pub event_time: u64
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TradeLite {
+    #[serde(rename = "E")]
+    pub event_time: u64,
+    #[serde(rename = "T")]
+    pub transaction_time: u64,
+    #[serde(rename = "s")]
+    pub symbol: String,
+    #[serde(rename = "q", with = "string_or_float")]
+    pub quantity: f64,
+    #[serde(rename = "p", with = "string_or_float")]
+    pub price: f64,
+    #[serde(rename = "m")]
+    pub is_maker: bool,
+    #[serde(rename = "c")]
+    pub client_order_id: String,
+    #[serde(rename = "S")]
+    pub side: OrderSide,
+    #[serde(rename = "L", with = "string_or_float")]
+    pub last_filled_price: f64,
+    #[serde(rename = "l", with = "string_or_float")]
+    pub order_last_filled_quantity: f64,
+    #[serde(rename = "t")]
+    pub trade_id: u64,
+    #[serde(rename = "i")]
+    pub order_id: u64,
+}
+
 
 #[derive(Debug, Deserialize)]
 pub struct AccountUpdate {
