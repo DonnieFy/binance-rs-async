@@ -2,18 +2,24 @@ use crate::futures::rest_model::{MarginType, OrderType, PositionSide, WorkingTyp
 use crate::rest_model::{string_or_float, string_or_float_opt, ExecutionType, OrderSide, OrderStatus, TimeInForce};
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "e")]
+#[serde(tag = "e")]
 pub enum WebsocketEvent {
+    #[serde(alias = "ACCOUNT_UPDATE")]
     AccountUpdate(Box<AccountUpdate>),
+    #[serde(alias = "ORDER_TRADE_UPDATE")]
     OrderTradeUpdate(Box<OrderTradeUpdate>),
+    #[serde(alias = "TRADE_LITE")]
     TradeLite(Box<TradeLite>),
+    #[serde(alias = "listenKeyExpired")]
     ListenKeyExpired(Box<ListenKeyExpired>),
 }
 
 #[derive(Debug, Deserialize)]
 pub struct ListenKeyExpired {
     #[serde(rename = "E")]
-    pub event_time: u64
+    pub event_time: u64,
+    #[serde(rename = "listenKey")]
+    pub listen_key: String,
 }
 
 #[derive(Debug, Deserialize)]
