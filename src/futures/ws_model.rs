@@ -1,5 +1,5 @@
 use crate::futures::rest_model::{MarginType, OrderType, PositionSide, WorkingType};
-use crate::rest_model::{string_or_float, string_or_float_opt, ExecutionType, OrderSide, OrderStatus, TimeInForce};
+use crate::rest_model::{string_or_float, string_or_u64, string_or_float_opt, ExecutionType, OrderSide, OrderStatus, TimeInForce};
 
 #[derive(Debug, Deserialize)]
 #[serde(tag = "e")]
@@ -16,7 +16,7 @@ pub enum WebsocketEvent {
 
 #[derive(Debug, Deserialize)]
 pub struct ListenKeyExpired {
-    #[serde(rename = "E")]
+    #[serde(rename = "E", with = "string_or_u64")]
     pub event_time: u64,
     #[serde(rename = "listenKey")]
     pub listen_key: String,
